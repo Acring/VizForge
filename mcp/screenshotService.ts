@@ -140,25 +140,35 @@ class ComponentScreenshotGenerator {
     darkMode: boolean
   ): Promise<void> {
     // console.log('正在启动浏览器...');
-    this.browser = await puppeteer.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    
-    this.page = await this.browser.newPage();
-    
-    // 模拟深色模式媒体查询
-    if (darkMode) {
-      await this.page.emulateMediaFeatures([
-        { name: 'prefers-color-scheme', value: 'dark' }
-      ]);
+    try {
+      this.browser = await puppeteer.launch({
+        headless: true,
+        args: ['--no-sandbox', '--disable-setuid-sandbox']
+      });
+      
+      this.page = await this.browser.newPage();
+      
+      // 模拟深色模式媒体查询
+      if (darkMode) {
+        await this.page.emulateMediaFeatures([
+          { name: 'prefers-color-scheme', value: 'dark' }
+        ]);
+      }
+      
+      await this.page.setViewport({
+        width,
+        height,
+        deviceScaleFactor // 高分辨率截图
+      });
+    } catch (error) {
+      if (error instanceof Error && error.message.includes('Could not find Chrome')) {
+        throw new Error(
+          '找不到 Chrome 浏览器。请运行 "npx puppeteer browsers install chrome" 安装所需的浏览器。' +
+          '详情请参考 README.md 中的"组件截图功能"部分。'
+        );
+      }
+      throw error;
     }
-    
-    await this.page.setViewport({
-      width,
-      height,
-      deviceScaleFactor // 高分辨率截图
-    });
   }
   
   /**
@@ -230,7 +240,8 @@ class ComponentScreenshotGenerator {
    */
   public registerComponent(
     name: string, 
-    component: ComponentType<any>, 
+    component: ComponentType<any>,
+    description: string,
     propTypes: Record<string, {
       type: string;
       required: boolean;
@@ -238,27 +249,38 @@ class ComponentScreenshotGenerator {
       description?: string;
     }>
   ): void {
-    this.componentMap[name] = { component, propTypes };
+    this.componentMap[name] = { component, description, propTypes };
   }
   
   /**
    * 获取已注册的组件列表
    */
-  public getRegisteredComponents(): Record<string, ComponentInfo> {
-    return this.componentMap;
+  public getRegisteredComponents(): Record<string, { description: string }> {
+    const result: Record<string, { description: string }> = {};
+    
+    // 只返回组件名称和描述
+    for (const [name, info] of Object.entries(this.componentMap)) {
+      result[name] = { description: info.description };
+    }
+    
+    return result;
   }
   
   /**
-   * 获取组件的参数信息
+   * 获取组件的属性信息
    */
-  public getComponentPropTypes(componentName: string): Record<string, {
+  public getComponentProps(componentName: string): Record<string, {
     type: string;
     required: boolean;
     defaultValue?: any;
     description?: string;
   }> | null {
     const componentInfo = this.componentMap[componentName];
-    return componentInfo ? componentInfo.propTypes : null;
+    if (!componentInfo) {
+      return null;
+    }
+    
+    return componentInfo.propTypes;
   }
 }
 

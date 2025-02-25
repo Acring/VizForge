@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "next build && pnpm build:mcp",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
     "build:mcp": "tsup --config tsup.config.ts",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.6.0",

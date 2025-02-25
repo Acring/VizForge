@@ -84,16 +84,32 @@ const GENERATE_CHART_TOOL: Tool = {
 // 定义列出可用组件的工具
 const LIST_COMPONENTS_TOOL: Tool = {
   name: 'list_components',
-  description: '列出所有可用于生成图表的组件，并返回组件的参数信息',
+  description: '列出所有可用于生成图表的组件，仅返回组件名称和描述信息',
   inputSchema: {
     type: 'object',
     properties: {},
   },
 };
 
+// 定义获取组件参数的工具
+const GET_COMPONENT_PROPS_TOOL: Tool = {
+  name: 'get_component_props',
+  description: '获取特定组件的详细参数信息',
+  inputSchema: {
+    type: 'object',
+    properties: {
+      componentName: {
+        type: 'string',
+        description: '要获取参数信息的组件名称',
+      },
+    },
+    required: ['componentName'],
+  },
+};
+
 // 设置工具列表处理器
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [HELLO_WORLD_TOOL, GENERATE_CHART_TOOL, LIST_COMPONENTS_TOOL],
+  tools: [HELLO_WORLD_TOOL, GENERATE_CHART_TOOL, LIST_COMPONENTS_TOOL, GET_COMPONENT_PROPS_TOOL],
 }));
 
 // 设置工具调用处理器
@@ -195,6 +211,56 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
           {
             type: 'text',
             text: `获取组件列表时出错: ${error instanceof Error ? error.message : String(error)}`,
+          },
+        ],
+        isError: true,
+      };
+    }
+  }
+  
+  // 处理获取组件参数的请求
+  if (request.params.name === GET_COMPONENT_PROPS_TOOL.name) {
+    try {
+      if (typeof args?.componentName !== 'string') {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: '缺少必需的参数：componentName（必须是字符串）',
+            },
+          ],
+          isError: true,
+        };
+      }
+      
+      const componentProps = screenshotGenerator.getComponentProps(args.componentName);
+      
+      if (!componentProps) {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: `找不到组件: ${args.componentName}`,
+            },
+          ],
+          isError: true,
+        };
+      }
+      
+      return {
+        content: [
+          {
+            type: 'text',
+            text: JSON.stringify(componentProps),
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: 'text',
+            text: `获取组件参数时出错: ${error instanceof Error ? error.message : String(error)}`,
           },
         ],
         isError: true,
