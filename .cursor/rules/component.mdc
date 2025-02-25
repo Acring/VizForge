@@ -1,0 +1,11 @@
+---
+description: 
+globs: src/components/*.tsx
+alwaysApply: false
+---
+# 组件编写规范
+
+1. 组件是服务端渲染的，不要引入客户端的 API
+2. 组件不应该存在动画效果
+3. 默认样式使用 tailwind 编写，外部可控制的样式需要用 style 传入，传入参数数量不要太多
+4. 注释完备，逻辑优雅，样式美观

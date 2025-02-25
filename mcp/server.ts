@@ -24,26 +24,10 @@ const server = new Server(
   }
 );
 
-// 定义一个简单的 Hello World 工具
-const HELLO_WORLD_TOOL: Tool = {
-  name: 'say_hello',
-  description: '返回一个简单的问候消息 123',
-  inputSchema: {
-    type: 'object',
-    properties: {
-      name: {
-        type: 'string',
-        description: '要问候的名字',
-      },
-    },
-    required: ['name'],
-  },
-};
-
 // 定义生成组件截图的工具
 const GENERATE_CHART_TOOL: Tool = {
   name: 'generate_chart',
-  description: '生成组件的截图，可用于各种图表和可视化',
+  description: '生成组件的截图，可用于各种数据可视化场景，包括数据分析图表（柱状图、折线图、饼图等）、功能对比表格、流程图、产品特性展示、技术架构图、数据仪表盘、时间线等',
   inputSchema: {
     type: 'object',
     properties: {
@@ -66,11 +50,11 @@ const GENERATE_CHART_TOOL: Tool = {
       },
       props: {
         type: 'object',
-        description: '传递给组件的属性',
+        description: '传递给组件的属性，用于自定义图表内容和样式',
       },
       darkMode: {
         type: 'boolean',
-        description: '是否使用深色模式',
+        description: '是否使用深色模式主题',
       },
       deviceScaleFactor: {
         type: 'number',
@@ -84,7 +68,7 @@ const GENERATE_CHART_TOOL: Tool = {
 // 定义列出可用组件的工具
 const LIST_COMPONENTS_TOOL: Tool = {
   name: 'list_components',
-  description: '列出所有可用于生成图表的组件，仅返回组件名称和描述信息',
+  description: '列出所有可用于生成图表的组件，并返回组件的参数信息，帮助用户了解可用的可视化选项和所需参数',
   inputSchema: {
     type: 'object',
     properties: {},
@@ -109,35 +93,12 @@ const GET_COMPONENT_PROPS_TOOL: Tool = {
 
 // 设置工具列表处理器
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [HELLO_WORLD_TOOL, GENERATE_CHART_TOOL, LIST_COMPONENTS_TOOL, GET_COMPONENT_PROPS_TOOL],
+  tools: [GENERATE_CHART_TOOL, LIST_COMPONENTS_TOOL, GET_COMPONENT_PROPS_TOOL],
 }));
 
 // 设置工具调用处理器
 server.setRequestHandler(CallToolRequestSchema, async request => {
   const args = request.params.arguments as Record<string, unknown>;
-
-  if (request.params.name === HELLO_WORLD_TOOL.name) {
-    if (typeof args?.name !== 'string') {
-      return {
-        content: [
-          {
-            type: 'text',
-            text: '缺少必需的参数：name（必须是字符串）',
-          },
-        ],
-        isError: true,
-      };
-    }
-
-    return {
-      content: [
-        {
-          type: 'text',
-          text: `你好，${args.name}！欢迎来到 MCP 世界！`,
-        },
-      ],
-    };
-  }
   
   // 处理生成图表截图的请求
   if (request.params.name === GENERATE_CHART_TOOL.name) {
@@ -153,7 +114,18 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
           isError: true,
         };
       }
-      
+      if (typeof args?.outputPath !== 'string') {
+        return {
+          content: [
+            {
+              type: 'text',
+              text: '缺少必需的参数：outputPath（必须是字符串）',
+            },
+          ],
+          isError: true,
+        };
+      }
+
       // 准备截图选项
       const options: ScreenshotOptions = {
         componentName: args.componentName,

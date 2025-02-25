@@ -7,6 +7,17 @@ interface HelloWorldProps {
   fontSize?: string;
 }
 
+/**
+ * 一个简单的问候组件，用于测试 MCP 服务连接是否正常
+ * 
+ * @param {Object} props - 组件的属性
+ * @param {string} props.name - 要问候的名字，默认为 "世界"
+ * @param {string} props.textColor - 文本颜色，默认为 "#000"
+ * @param {string} props.fontSize - 字体大小，默认为 "16px"
+ * @param {Object} props.style - 组件的样式对象
+ * @param {string} props.style.color - 文本颜色，默认为 "#000"
+ * @param {string} props.style.fontSize - 字体大小，默认为 "16px"
+ */
 const HelloWorld: React.FC<HelloWorldProps> = ({
   name = '世界',
   textColor,
