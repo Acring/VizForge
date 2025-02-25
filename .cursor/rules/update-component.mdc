@@ -1,0 +1,8 @@
+---
+description: 当用户希望新增或者修改组件时，执行下面操作
+globs: 
+alwaysApply: false
+---
+1. 根据用户要求新增修改组件文件
+2. 检查对应的 storybook 文件是否需要新增或修改，在 src/stories/ 文件夹下
+3. 检查 [componentMap.ts](mdc:mcp/componentMap.ts) 是否需要新增或者更新 props 
