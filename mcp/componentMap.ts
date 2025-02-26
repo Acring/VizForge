@@ -4,6 +4,7 @@ import HelloWorld from '../src/components/HelloWorld';
 import TitleWithAuthor from '../src/components/TitleWithAuthor';
 import ComparisonChart from '../src/components/ComparisonChart';
 import SvgRenderer from '../src/components/SvgRenderer';
+import CanvasRenderer from '../src/components/CanvasRenderer';
 
 // 组件信息接口
 export interface ComponentInfo {
@@ -210,6 +211,48 @@ const ComponentMap: Record<string, ComponentInfo> = {
         required: false,
         defaultValue: undefined,
         description: '可选的描述文本，用于无障碍'
+      }
+    }
+  },
+  'CanvasRenderer': {
+    component: CanvasRenderer,
+    description: 'Canvas渲染组件，允许传入自定义的canvas绘制代码字符串来渲染画布',
+    propTypes: {
+      drawCode: {
+        type: 'string',
+        required: false,
+        defaultValue: '// 绘制简单矩形\nctx.fillStyle = "blue";\nctx.fillRect(10, 10, canvas.width - 20, canvas.height - 20);',
+        description: 'Canvas绘制代码字符串，可以使用ctx和canvas参数'
+      },
+      width: {
+        type: 'string|number',
+        required: false,
+        defaultValue: 300,
+        description: '宽度'
+      },
+      height: {
+        type: 'string|number',
+        required: false,
+        defaultValue: 200,
+        description: '高度'
+      },
+      className: {
+        type: 'string',
+        required: false,
+        defaultValue: '',
+        description: '可选的className'
+      },
+      style: {
+        type: 'object',
+        required: false,
+        defaultValue: {},
+        description: '可选的内联样式对象'
+      },
+      backgroundColor: {
+        type: 'string',
+        required: false,
+        defaultValue: undefined,
+        description: '可选的背景颜色'
       }
     }
   },
