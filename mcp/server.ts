@@ -27,7 +27,7 @@ const server = new Server(
 // 定义生成组件截图的工具
 const GENERATE_CHART_TOOL: Tool = {
   name: 'generate_chart',
-  description: '生成组件的截图，可用于各种数据可视化场景，包括数据分析图表（柱状图、折线图、饼图等）、功能对比表格、流程图、产品特性展示、技术架构图、数据仪表盘、时间线等',
+  description: '生成组件的截图，可用于各种数据可视化场景，包括数据分析图表（柱状图、折线图、饼图等）、功能对比表格、流程图、产品特性展示、技术架构图、数据仪表盘、时间线等，生成前请使用list_components工具获取组件列表，然后使用get_component_props工具获取组件的参数信息',
   inputSchema: {
     type: 'object',
     properties: {
