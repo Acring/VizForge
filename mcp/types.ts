@@ -3,7 +3,7 @@ import { ComponentType } from 'react';
 
 // 组件信息接口
 export interface ComponentInfo {
-  component: ComponentType<any>;
+  component?: ComponentType<any>;
   description: string;
   propTypes: Record<string, {
     type: string;

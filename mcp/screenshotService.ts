@@ -7,6 +7,8 @@ import React, { ComponentType } from 'react';
 import { renderToString } from 'react-dom/server';
 import ComponentMap from './componentMap';
 import { ComponentInfo } from './types';
+import { createCanvas } from 'canvas';
+import vm from 'vm';
 
 // 获取当前文件的目录
 const __filename = fileURLToPath(import.meta.url);
@@ -67,7 +69,15 @@ class ComponentScreenshotGenerator {
         throw new Error(`找不到组件: ${componentName}。可用组件: ${Object.keys(this.componentMap).join(', ')}`);
       }
       
+      // 特殊处理 CanvasRenderer 组件，使用 node-canvas 直接渲染
+      if (componentName === 'CanvasRenderer') {
+        return this.generateCanvasScreenshot(outputPath, width, height, props);
+      }
+      
       const Component = componentInfo.component;
+      if(!Component) {
+        throw new Error(`找不到组件: ${componentName}。可用组件: ${Object.keys(this.componentMap).join(', ')}`);
+      }
       
       // 创建 HTML 文件
       await this.createHtmlFile(Component, props, darkMode);
@@ -101,6 +111,80 @@ class ComponentScreenshotGenerator {
   }
   
   /**
+   * 使用 node-canvas 生成 Canvas 截图
+   */
+  private async generateCanvasScreenshot(
+    outputPath: string,
+    width: number,
+    height: number,
+    props: Record<string, unknown>
+  ): Promise<{
+    outputPath: string;
+    base64: string;
+    mimeType: string;
+  }> {
+    try {
+      // 创建 canvas
+      const canvas = createCanvas(width, height);
+      const ctx = canvas.getContext('2d');
+      
+      // 获取绘制代码
+      const drawCode = props.drawCode as string || `
+        // 设置白色背景
+        ctx.fillStyle = 'white';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        
+        // 重置填充颜色为黑色（用于后续文字）
+        ctx.fillStyle = 'black';
+        
+        // 绘制文字
+        ctx.font = '30px Impact';
+        ctx.rotate(0.1);
+        ctx.fillText('Canvas Render', 50, 100);
+        
+        // 绘制线条
+        var text = ctx.measureText('Canvas Render');
+        ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+        ctx.beginPath();
+        ctx.lineTo(50, 102);
+        ctx.lineTo(50 + text.width, 102);
+        ctx.stroke();
+      `;
+      
+      // 设置背景颜色（如果有）
+      if (props.backgroundColor) {
+        ctx.fillStyle = props.backgroundColor as string;
+        ctx.fillRect(0, 0, width, height);
+      }
+      
+      // 创建执行上下文
+      const contextObject = {
+        ctx,
+        canvas
+      };
+      
+      // 使用 vm 模块执行代码
+      vm.createContext(contextObject);
+      vm.runInContext(drawCode, contextObject);
+      
+      // 保存图像到文件
+      const finalOutputPath = path.resolve(process.cwd(), outputPath);
+      const buffer = canvas.toBuffer('image/png');
+      fs.writeFileSync(finalOutputPath, buffer);
+      
+      // 返回结果
+      return {
+        outputPath: finalOutputPath,
+        base64: buffer.toString('base64'),
+        mimeType: 'image/png'
+      };
+    } catch (error) {
+      console.error('生成 Canvas 截图时出错:', error);
+      throw error;
+    }
+  }
+  
+  /**
    * 创建临时 HTML 文件
    */
   private async createHtmlFile(
@@ -109,7 +193,11 @@ class ComponentScreenshotGenerator {
     darkMode: boolean
   ): Promise<void> {
     // 渲染组件为 HTML 字符串
-    const componentHtml = renderToString(React.createElement(Component, props));
+    const componentHtml = renderToString(React.createElement(Component, {
+      ...props,
+      width: props.width || 400,
+      height: props.height || 400
+    }));
     
     // 创建完整的 HTML 文档
     const html = `
@@ -230,10 +318,10 @@ class ComponentScreenshotGenerator {
     }
     
     // 删除临时 HTML 文件
-    if (this.tempHtmlPath && fs.existsSync(this.tempHtmlPath)) {
-      fs.unlinkSync(this.tempHtmlPath);
-      this.tempHtmlPath = '';
-    }
+    // if (this.tempHtmlPath && fs.existsSync(this.tempHtmlPath)) {
+    //   fs.unlinkSync(this.tempHtmlPath);
+    //   this.tempHtmlPath = '';
+    // }
   }
   
   /**

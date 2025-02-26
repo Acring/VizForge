@@ -1,4 +1,3 @@
- 
 import { ComponentInfo } from '../types';
 import TitleWithAuthor from '../../src/components/TitleWithAuthor';
 

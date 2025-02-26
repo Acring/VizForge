@@ -1,5 +1,5 @@
 ---
-description: 当用户希望新增或者修改组件时，执行下面操作
+description: 当用户希望新增或者修改图表组件时，执行下面操作
 globs: 
 alwaysApply: false
 ---

@@ -7,23 +7,22 @@
  */
 
 // 使用方法：
-// 1. 首先构建工具: pnpm build:screenshot
-// 2. 然后运行此示例: node mcp/examples/screenshot-example.js
+// 1. 首先构建工具: pnpm build:mcp
+// 2. 然后运行此示例: node ./scripts/examples/screenshot-example.js
 
 import { execSync } from 'child_process';
 
 // 组件路径
-const component = 'CanvasRenderer';
+const component = 'HelloWorld';
 
 // 输出路径
-const outputPath = 'canvas-renderer-screenshot.png';
+const outputPath = 'helloworld-screenshot.png';
 
 // 组件属性 (JSON 格式)
 const props = JSON.stringify({
-  drawCode: "// 设置背景\nctx.fillStyle = '#1a1a2e';",
-  width: 300,
-  height: 200,
-  backgroundColor: '#f0f9ff',
+  name: '组件截图工具',
+  textColor: 'green',
+  fontSize: '1.5rem'
 });
 
 // 构建命令
