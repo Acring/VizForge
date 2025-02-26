@@ -13,16 +13,17 @@
 import { execSync } from 'child_process';
 
 // 组件路径
-const component = 'HelloWorld';
+const component = 'CanvasRenderer';
 
 // 输出路径
-const outputPath = 'helloworld-screenshot.png';
+const outputPath = 'canvas-renderer-screenshot.png';
 
 // 组件属性 (JSON 格式)
 const props = JSON.stringify({
-  name: '组件截图工具',
-  textColor: 'green',
-  fontSize: '1.5rem'
+  drawCode: "// 设置背景\nctx.fillStyle = '#1a1a2e';",
+  width: 300,
+  height: 200,
+  backgroundColor: '#f0f9ff',
 });
 
 // 构建命令

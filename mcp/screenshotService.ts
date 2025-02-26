@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url';
 import puppeteer, { Browser, Page } from 'puppeteer';
 import React, { ComponentType } from 'react';
 import { renderToString } from 'react-dom/server';
-import ComponentMap, { ComponentInfo } from './componentMap';
+import ComponentMap from './componentMap';
+import { ComponentInfo } from './types';
 
 // 获取当前文件的目录
 const __filename = fileURLToPath(import.meta.url);
