@@ -9,6 +9,7 @@ import ComponentMap from './componentMap';
 import { ComponentInfo } from './types';
 import { createCanvas } from 'canvas';
 import vm from 'vm';
+import { run } from '@mermaid-js/mermaid-cli';
 
 // 获取当前文件的目录
 const __filename = fileURLToPath(import.meta.url);
@@ -31,6 +32,16 @@ interface ScreenshotOptions {
   props?: Record<string, unknown>;
   darkMode?: boolean;
   deviceScaleFactor?: number;
+}
+
+// Mermaid 图表生成选项
+interface MermaidOptions {
+  definition: string;
+  outputPath?: string;
+  width?: number;
+  height?: number;
+  backgroundColor?: string;
+  theme?: 'default' | 'forest' | 'dark' | 'neutral';
 }
 
 class ComponentScreenshotGenerator {
@@ -74,6 +85,18 @@ class ComponentScreenshotGenerator {
         return this.generateCanvasScreenshot(outputPath, width, height, props);
       }
       
+      // 特殊处理 Mermaid 组件，使用 mermaid-cli 直接渲染
+      if (componentName === 'MermaidRenderer') {
+        return this.generateMermaidDiagram({
+          definition: props.definition as string,
+          outputPath,
+          width,
+          height,
+          backgroundColor: props.backgroundColor as string,
+          theme: props.theme as 'default' | 'forest' | 'dark' | 'neutral'
+        });
+      }
+      
       const Component = componentInfo.component;
       if(!Component) {
         throw new Error(`找不到组件: ${componentName}。可用组件: ${Object.keys(this.componentMap).join(', ')}`);
@@ -106,6 +129,74 @@ class ComponentScreenshotGenerator {
     } catch (error) {
       // console.error('❌ 生成截图时出错:', error);
       await this.cleanup();
+      throw error;
+    }
+  }
+  
+  /**
+   * 生成 Mermaid 图表
+   */
+  public async generateMermaidDiagram(options: MermaidOptions): Promise<{
+    outputPath: string;
+    base64: string;
+    mimeType: string;
+  }> {
+    try {
+      const {
+        definition,
+        outputPath = 'mermaid-diagram.png',
+        backgroundColor = 'white',
+        theme = 'default'
+      } = options;
+      
+      if (!definition) {
+        throw new Error('缺少 Mermaid 图表定义');
+      }
+      
+      // 创建临时目录
+      const tempDir = path.join(__dirname, 'temp-mermaid');
+      if (!fs.existsSync(tempDir)) {
+        fs.mkdirSync(tempDir, { recursive: true });
+      }
+      
+      // 创建临时 Mermaid 文件
+      const mermaidFilePath = path.join(tempDir, `diagram-${Date.now()}.mmd`);
+      fs.writeFileSync(mermaidFilePath, definition.trim());
+      
+      // 设置 mermaid-cli 配置
+      const mermaidConfig = {
+        backgroundColor,
+        theme,
+        puppeteerConfig: {
+          headless: true,
+          args: ['--no-sandbox', '--disable-setuid-sandbox']
+        }
+      };
+      
+      // 生成 PNG 文件
+      const finalOutputPath = path.resolve(process.cwd(), outputPath);
+      await run(
+        mermaidFilePath as `${string}.mmd`, 
+        finalOutputPath as `${string}.png`, 
+        mermaidConfig
+      );
+      
+      // 读取生成的图像并转换为 base64
+      const imageBuffer = fs.readFileSync(finalOutputPath);
+      const base64Image = imageBuffer.toString('base64');
+      
+      // 清理临时文件
+      if (fs.existsSync(mermaidFilePath)) {
+        fs.unlinkSync(mermaidFilePath);
+      }
+      
+      return {
+        outputPath: finalOutputPath,
+        base64: base64Image,
+        mimeType: 'image/png'
+      };
+    } catch (error) {
+      console.error('生成 Mermaid 图表时出错:', error);
       throw error;
     }
   }

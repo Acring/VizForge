@@ -13,6 +13,7 @@
     "postinstall": "npx puppeteer browsers install chrome"
   },
   "dependencies": {
+    "@mermaid-js/mermaid-zenuml": "^0.2.0",
     "@modelcontextprotocol/sdk": "^1.6.0",
     "canvas": "^3.1.0",
     "clsx": "^2.1.1",
@@ -24,7 +25,9 @@
     "react-dom": "^19.0.0",
     "recharts": "^2.15.1",
     "tailwind-merge": "^3.0.2",
-    "zod": "^3.24.2"
+    "zod": "^3.24.2",
+    "mermaid": "^11.4.1",
+    "@mermaid-js/mermaid-cli": "^11.4.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
