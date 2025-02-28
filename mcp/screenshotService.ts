@@ -42,6 +42,7 @@ interface MermaidOptions {
   height?: number;
   backgroundColor?: string;
   theme?: 'default' | 'forest' | 'dark' | 'neutral';
+  deviceScaleFactor?: number;
 }
 
 class ComponentScreenshotGenerator {
@@ -68,7 +69,7 @@ class ComponentScreenshotGenerator {
         height = 600,
         props = {},
         darkMode = true,
-        deviceScaleFactor = 2
+        deviceScaleFactor = 3
       } = options;
       
       // 从组件映射中获取组件
@@ -93,7 +94,8 @@ class ComponentScreenshotGenerator {
           width,
           height,
           backgroundColor: props.backgroundColor as string,
-          theme: props.theme as 'default' | 'forest' | 'dark' | 'neutral'
+          theme: props.theme as 'default' | 'forest' | 'dark' | 'neutral',
+          deviceScaleFactor
         });
       }
       
@@ -146,7 +148,10 @@ class ComponentScreenshotGenerator {
         definition,
         outputPath = 'mermaid-diagram.png',
         backgroundColor = 'white',
-        theme = 'default'
+        theme = 'default',
+        deviceScaleFactor = 3,
+        width = 800,
+        height = 600
       } = options;
       
       if (!definition) {
@@ -170,6 +175,13 @@ class ComponentScreenshotGenerator {
         puppeteerConfig: {
           headless: true,
           args: ['--no-sandbox', '--disable-setuid-sandbox']
+        },
+        parseMMDOptions: {
+          viewport: {
+            height: height,
+            width: width,
+            deviceScaleFactor: deviceScaleFactor
+          }
         }
       };
       
@@ -178,7 +190,8 @@ class ComponentScreenshotGenerator {
       await run(
         mermaidFilePath as `${string}.mmd`, 
         finalOutputPath as `${string}.png`, 
-        mermaidConfig
+        mermaidConfig,
+        
       );
       
       // 读取生成的图像并转换为 base64

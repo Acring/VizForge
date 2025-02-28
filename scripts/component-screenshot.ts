@@ -15,6 +15,7 @@ program
   .option('-p, --props <json>', '传递给组件的属性 (JSON 格式)', '{}')
   .option('-d, --dark-mode', '使用深色模式', false)
   .option('-t, --tailwind-config <path>', 'Tailwind 配置文件路径', path.resolve(process.cwd(), 'tailwind.config.ts'))
+  .option('-s, --device-scale-factor <number>', '设备缩放因子', '2')
   .parse(process.argv);
 
 const options = program.opts();
@@ -51,7 +52,7 @@ async function generateScreenshot() {
       height,
       props,
       darkMode,
-      deviceScaleFactor: 2
+      deviceScaleFactor: parseInt(options.deviceScaleFactor)
     });
     
     console.log(`✅ 截图已保存到: ${result.outputPath}`);

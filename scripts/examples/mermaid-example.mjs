@@ -20,13 +20,13 @@ const outputPath = 'mermaid-renderer-screenshot.png';
 
 // 组件属性 (JSON 格式)
 const props = JSON.stringify({
-  definition: "sequenceDiagram\n    autonumber\n    participant 用户\n    participant 浏览器\n    participant 认证服务\n    participant 数据库\n\n    用户->>浏览器: 输入用户名和密码\n    浏览器->>认证服务: 发送登录请求\n    认证服务->>数据库: 查询用户信息\n    数据库-->>认证服务: 返回用户数据\n\n    alt 登录成功\n        认证服务->>认证服务: 生成JWT令牌\n        认证服务-->>浏览器: 返回JWT令牌和用户信息\n        浏览器-->>用户: 显示登录成功，跳转到首页\n    else 登录失败\n        认证服务-->>浏览器: 返回错误信息\n        浏览器-->>用户: 显示错误提示\n    end\n\n    note over 浏览器,认证服务: 使用HTTPS加密通信",
+  definition: "graph TD\n  root[项目根目录] --> src[src/]\n  root --> public[public/]\n  root --> config_files[配置文件]\n  \n  src --> app[app/]\n  src --> components[components/]\n  src --> data[data/]\n  \n  app --> page[page.tsx]\n  app --> flowers[flowers/]\n  app --> layout[layout.tsx]\n  app --> globals_css[globals.css]\n  app --> favicon[favicon.ico]\n  \n  flowers --> id[id/]\n  id --> not_found[not-found.tsx]\n  id --> flower_page[page.tsx]\n  \n  components --> flower_card[FlowerCard.tsx]\n  \n  data --> flowers_ts[flowers.ts]\n  data --> flowers_dir[flowers/]\n  \n  flowers_dir --> flower_basics[flowerBasics.ts]\n  flowers_dir --> flower_details[flowerDetails.ts]\n  flowers_dir --> index[index.ts]\n  \n  public --> images[images/]\n  public --> svg_files[SVG文件]\n  \n  config_files --> package_json[package.json]\n  config_files --> tsconfig[tsconfig.json]\n  config_files --> next_config[next.config.ts]\n  config_files --> postcss_config[postcss.config.mjs]\n  config_files --> eslint_config[eslint.config.mjs]\n  config_files --> next_env[next-env.d.ts]",
   backgroundColor: 'white',
   theme: 'forest',
 });
 
 // 构建命令
-const command = `node dist/scripts/component-screenshot.mjs --component ${component} --output ${outputPath} --props '${props}'`;
+const command = `node dist/scripts/component-screenshot.mjs --component ${component} --output ${outputPath} --width 1000 --height 1000 --props '${props}' --device-scale-factor 3`;
 
 console.log('执行命令:', command);
 

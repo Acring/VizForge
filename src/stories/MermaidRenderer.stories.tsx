@@ -1,11 +1,12 @@
+
 import type { Meta, StoryObj } from '@storybook/react';
-import MermaidRendererInfo from '../../mcp/components/MermaidRenderer';
+import MermaidRendererInfo, { MermaidRendererProps } from '../../mcp/components/MermaidRenderer';
+import { useEffect } from 'react';
+import mermaid from 'mermaid';
 
 const meta = {
   title: '图表组件/MermaidRenderer',
-  component: MermaidRendererInfo.component,
   parameters: {
-    layout: 'centered',
   },
   tags: ['autodocs'],
   argTypes: {
@@ -15,14 +16,44 @@ const meta = {
       control: 'select', 
       options: ['default', 'forest', 'dark', 'neutral'] 
     },
-    width: { control: 'number' },
-    height: { control: 'number' },
   },
 } as Meta<typeof MermaidRendererInfo.component>;
 
 export default meta;
 
-type Story = StoryObj<typeof MermaidRendererInfo.component>;
+// MermaidRenderer 组件
+const MermaidRenderer: React.FC<MermaidRendererProps> = ({ 
+  definition, 
+  backgroundColor = 'white',
+  theme = 'default',
+}) => {
+  useEffect(() => {
+    console.log('definition', definition);
+    mermaid.initialize({
+      startOnLoad: true,
+    });
+    mermaid.run({
+      querySelector: '.mermaid',
+    });
+
+  }, [definition]);
+  // 这个组件在服务端渲染时只是一个占位符
+  // 实际的 Mermaid 图表生成在 screenshotService.ts 中处理
+  return (
+      <pre className="mermaid" style={{ 
+        textAlign: 'left', 
+        background: `${backgroundColor}`,
+        overflow: 'auto',
+        fontFamily: 'monospace',
+        fontSize: '14px',
+        color: theme === 'dark' ? 'white' : 'black'
+      }}>
+        {definition}
+      </pre>
+  );
+};
+
+type Story = StoryObj<MermaidRendererProps>;
 
 // 基本时序图示例
 export const SequenceDiagram: Story = {
@@ -41,10 +72,11 @@ sequenceDiagram
     后端-->>前端: 返回处理结果
     前端-->>用户: 展示数据
 `,
-    width: 800,
-    height: 400,
     backgroundColor: 'white',
     theme: 'default',
+  },
+  render: (args) => {
+    return <MermaidRenderer {...args} />;
   },
 };
 
@@ -61,10 +93,11 @@ flowchart TD
     C --> F[用户操作]
     F --> G[结束]
 `,
-    width: 800,
-    height: 500,
     backgroundColor: '#f5f5f5',
     theme: 'forest',
+  },
+  render: (args) => {
+    return <MermaidRenderer {...args} />;
   },
 };
 
@@ -87,14 +120,13 @@ gantt
     section 发布
     部署上线        :a7, after a6, 2d
 `,
-    width: 800,
-    height: 400,
     backgroundColor: '#f0f8ff',
     theme: 'default',
   },
+  render: (args) => {
+    return <MermaidRenderer {...args} />;
+  },
 };
-
-// 类图示例
 export const ClassDiagram: Story = {
   args: {
     definition: `
@@ -115,9 +147,10 @@ classDiagram
     Animal <|-- Dog
     Animal <|-- Cat
 `,
-    width: 800,
-    height: 400,
     backgroundColor: '#fff',
     theme: 'dark',
+  },
+  render: (args) => {
+    return <MermaidRenderer {...args} />;
   },
 }; 
