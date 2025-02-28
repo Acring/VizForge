@@ -255,12 +255,12 @@ server.setRequestHandler(CallToolRequestSchema, async request => {
 async function main() {
   const transport = new StdioServerTransport();
   await server.connect(transport);
-  console.error('VizForge MCP 服务器正在运行...');
+  // console.error('VizForge MCP 服务器正在运行...');
 }
 
 // 启动服务器
 main().catch(async error => {
   await fs.appendFile('server.log', `${new Date().toISOString()} - ${error.stack || error}\n`);
-  console.error('主函数发生致命错误:', error);
+  // console.error('主函数发生致命错误:', error);
   process.exit(1);
 });

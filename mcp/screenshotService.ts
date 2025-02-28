@@ -186,6 +186,11 @@ class ComponentScreenshotGenerator {
       };
       
       // 生成 PNG 文件
+      // 检查输出路径是否存在
+      const outputDir = path.dirname(outputPath);
+      if (!fs.existsSync(outputDir)) {
+        fs.mkdirSync(outputDir, { recursive: true });
+      }
       const finalOutputPath = path.resolve(process.cwd(), outputPath);
       await run(
         mermaidFilePath as `${string}.mmd`, 
@@ -209,7 +214,7 @@ class ComponentScreenshotGenerator {
         mimeType: 'image/png'
       };
     } catch (error) {
-      console.error('生成 Mermaid 图表时出错:', error);
+
       throw error;
     }
   }
@@ -283,7 +288,7 @@ class ComponentScreenshotGenerator {
         mimeType: 'image/png'
       };
     } catch (error) {
-      console.error('生成 Canvas 截图时出错:', error);
+      // console.error('生成 Canvas 截图时出错:', error);
       throw error;
     }
   }
