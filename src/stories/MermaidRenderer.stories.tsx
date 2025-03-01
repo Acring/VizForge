@@ -1,20 +1,18 @@
-
 import type { Meta, StoryObj } from '@storybook/react';
 import MermaidRendererInfo, { MermaidRendererProps } from '../../mcp/components/MermaidRenderer';
 import { useEffect } from 'react';
 import mermaid from 'mermaid';
 
 const meta = {
-  title: '图表组件/MermaidRenderer',
-  parameters: {
-  },
+  title: 'Mermaid/MermaidRenderer',
+  parameters: {},
   tags: ['autodocs'],
   argTypes: {
     definition: { control: 'text' },
     backgroundColor: { control: 'color' },
-    theme: { 
-      control: 'select', 
-      options: ['default', 'forest', 'dark', 'neutral'] 
+    theme: {
+      control: 'select',
+      options: ['default', 'forest', 'dark', 'neutral'],
     },
   },
 } as Meta<typeof MermaidRendererInfo.component>;
@@ -22,8 +20,8 @@ const meta = {
 export default meta;
 
 // MermaidRenderer 组件
-const MermaidRenderer: React.FC<MermaidRendererProps> = ({ 
-  definition, 
+const MermaidRenderer: React.FC<MermaidRendererProps> = ({
+  definition,
   backgroundColor = 'white',
   theme = 'default',
 }) => {
@@ -35,21 +33,23 @@ const MermaidRenderer: React.FC<MermaidRendererProps> = ({
     mermaid.run({
       querySelector: '.mermaid',
     });
-
   }, [definition]);
   // 这个组件在服务端渲染时只是一个占位符
   // 实际的 Mermaid 图表生成在 screenshotService.ts 中处理
   return (
-      <pre className="mermaid" style={{ 
-        textAlign: 'left', 
+    <pre
+      className="mermaid"
+      style={{
+        textAlign: 'left',
         background: `${backgroundColor}`,
         overflow: 'auto',
         fontFamily: 'monospace',
         fontSize: '14px',
-        color: theme === 'dark' ? 'white' : 'black'
-      }}>
-        {definition}
-      </pre>
+        color: theme === 'dark' ? 'white' : 'black',
+      }}
+    >
+      {definition}
+    </pre>
   );
 };
 
@@ -75,7 +75,7 @@ sequenceDiagram
     backgroundColor: 'white',
     theme: 'default',
   },
-  render: (args) => {
+  render: args => {
     return <MermaidRenderer {...args} />;
   },
 };
@@ -96,7 +96,7 @@ flowchart TD
     backgroundColor: '#f5f5f5',
     theme: 'forest',
   },
-  render: (args) => {
+  render: args => {
     return <MermaidRenderer {...args} />;
   },
 };
@@ -123,7 +123,7 @@ gantt
     backgroundColor: '#f0f8ff',
     theme: 'default',
   },
-  render: (args) => {
+  render: args => {
     return <MermaidRenderer {...args} />;
   },
 };
@@ -150,7 +150,7 @@ classDiagram
     backgroundColor: '#fff',
     theme: 'dark',
   },
-  render: (args) => {
+  render: args => {
     return <MermaidRenderer {...args} />;
   },
-}; 
+};

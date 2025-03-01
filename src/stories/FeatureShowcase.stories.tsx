@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import FeatureShowcase from '../components/FeatureShowcase';
 
 const meta: Meta<typeof FeatureShowcase> = {
-  title: 'Components/FeatureShowcase',
+  title: 'Common/FeatureShowcase',
   component: FeatureShowcase,
   tags: ['autodocs'],
   argTypes: {
@@ -30,7 +30,7 @@ export const Basic: Story = {
       '直观的用户界面设计',
       '强大的数据分析能力',
       '安全的数据存储方案',
-      '灵活的自定义选项'
+      '灵活的自定义选项',
     ],
     backgroundColor: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #9333EA 100%)',
     textColor: 'white',
@@ -45,12 +45,7 @@ export const BlueGreenGradient: Story = {
   args: {
     title: '核心优势',
     subtitle: '为什么选择我们的产品',
-    features: [
-      '高效的工作流程',
-      '实时协作功能',
-      '跨平台兼容性',
-      '24/7 技术支持'
-    ],
+    features: ['高效的工作流程', '实时协作功能', '跨平台兼容性', '24/7 技术支持'],
     backgroundColor: 'linear-gradient(135deg, #0891B2 0%, #0EA5E9 40%, #059669 100%)',
     textColor: 'white',
     titleSize: '2.5rem',
@@ -64,12 +59,7 @@ export const OrangeRedGradient: Story = {
   args: {
     title: '技术亮点',
     subtitle: '先进的技术支持',
-    features: [
-      'AI 驱动的推荐系统',
-      '区块链安全保障',
-      '云原生架构',
-      '低延迟高并发'
-    ],
+    features: ['AI 驱动的推荐系统', '区块链安全保障', '云原生架构', '低延迟高并发'],
     backgroundColor: 'linear-gradient(135deg, #F97316 0%, #EF4444 60%, #DC2626 100%)',
     textColor: 'white',
     titleSize: '2.5rem',
@@ -83,12 +73,7 @@ export const RainbowGradient: Story = {
   args: {
     title: '服务承诺',
     subtitle: '我们对客户的承诺',
-    features: [
-      '100% 满意保证',
-      '30天无理由退款',
-      '终身技术支持',
-      '定期功能更新'
-    ],
+    features: ['100% 满意保证', '30天无理由退款', '终身技术支持', '定期功能更新'],
     backgroundColor: 'linear-gradient(135deg, #6366F1 0%, #EC4899 50%, #F59E0B 100%)',
     textColor: 'white',
     titleSize: '2.5rem',
@@ -102,12 +87,7 @@ export const LightTheme: Story = {
   args: {
     title: '企业方案',
     subtitle: '为企业量身定制',
-    features: [
-      '多用户管理系统',
-      '高级数据分析工具',
-      '自定义报表生成',
-      '专属客户经理'
-    ],
+    features: ['多用户管理系统', '高级数据分析工具', '自定义报表生成', '专属客户经理'],
     backgroundColor: 'linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 50%, #DBEAFE 100%)',
     textColor: '#1E3A8A',
     titleSize: '2.5rem',
@@ -125,7 +105,7 @@ export const SolidBackground: Story = {
       '界面简洁直观，易于上手',
       '功能强大，满足各种需求',
       '客户服务响应迅速',
-      '持续更新，不断改进'
+      '持续更新，不断改进',
     ],
     backgroundColor: '#1E40AF',
     textColor: 'white',
@@ -133,4 +113,4 @@ export const SolidBackground: Story = {
     subtitleSize: '1rem',
     featureSize: '1rem',
   },
-}; 
+};

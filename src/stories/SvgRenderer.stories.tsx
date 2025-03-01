@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import SvgRenderer from '../components/SvgRenderer';
 
 const meta: Meta<typeof SvgRenderer> = {
-  title: '组件/SvgRenderer',
+  title: 'Svg/SvgRenderer',
   component: SvgRenderer,
   parameters: {
     layout: 'centered',
@@ -41,8 +41,8 @@ export const 自定义图标: Story = {
     height: '64px',
     viewBox: '0 0 24 24',
     fill: 'none',
-    style: { 
-      stroke: '#9333ea', 
+    style: {
+      stroke: '#9333ea',
       strokeWidth: 2,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -104,4 +104,4 @@ export const 简单图表: Story = {
     viewBox: '0 0 100 60',
     title: '柱状图',
   },
-}; 
+};

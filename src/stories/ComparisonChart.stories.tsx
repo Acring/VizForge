@@ -3,7 +3,7 @@ import ComparisonChart from '../components/ComparisonChart';
 import { ComparisonItem } from '../components/ComparisonChart';
 
 const meta: Meta<typeof ComparisonChart> = {
-  title: '组件/ComparisonChart',
+  title: 'Common/ComparisonChart',
   component: ComparisonChart,
   parameters: {
     layout: 'centered',
@@ -28,7 +28,11 @@ type Story = StoryObj<typeof ComparisonChart>;
 
 // IDE对比数据
 const ideComparisonData: ComparisonItem[] = [
-  { feature: '代码补全', item1Value: '基于语法和简单上下文', item2Value: '基于深度理解和项目上下文' },
+  {
+    feature: '代码补全',
+    item1Value: '基于语法和简单上下文',
+    item2Value: '基于深度理解和项目上下文',
+  },
   { feature: '错误检测', item1Value: '主要是语法错误', item2Value: '语法、逻辑和最佳实践' },
   { feature: '代码生成', item1Value: '有限的模板', item2Value: '完整的、上下文相关的代码生成' },
   { feature: '学习曲线', item1Value: '通常较陡峭', item2Value: 'AI辅助使学习更简单' },
@@ -48,7 +52,7 @@ export const IDE对比: Story = {
     textColor: '#1e3a8a',
     style: {
       maxWidth: '800px',
-    }
+    },
   },
 };
 
@@ -74,7 +78,7 @@ export const 编程语言对比: Story = {
     textColor: '#5b21b6',
     style: {
       maxWidth: '800px',
-    }
+    },
   },
 };
 
@@ -99,7 +103,7 @@ export const 数据库对比: Story = {
     textColor: '#065f46',
     style: {
       maxWidth: '800px',
-    }
+    },
   },
 };
 
@@ -122,6 +126,6 @@ export const 深色主题: Story = {
     textColor: '#f8fafc',
     style: {
       maxWidth: '800px',
-    }
+    },
   },
-}; 
+};

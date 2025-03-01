@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import TitleWithAuthor from '../components/TitleWithAuthor';
 
 const meta: Meta<typeof TitleWithAuthor> = {
-  title: '组件/TitleWithAuthor',
+  title: 'Common/TitleWithAuthor',
   component: TitleWithAuthor,
   parameters: {
     layout: 'centered',
@@ -92,4 +92,4 @@ export const 自定义样式: Story = {
       boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
     },
   },
-}; 
+};

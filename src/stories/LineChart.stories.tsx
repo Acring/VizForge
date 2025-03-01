@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { LineChart } from '../components/LineChart';
 
 const meta: Meta<typeof LineChart> = {
-  title: '图表/LineChart',
+  title: 'Chart/LineChart',
   component: LineChart,
   parameters: {
     layout: 'centered',
@@ -29,30 +29,28 @@ export default meta;
 type Story = StoryObj<typeof LineChart>;
 
 const singleLineData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { month: 'January', desktop: 186 },
+  { month: 'February', desktop: 305 },
+  { month: 'March', desktop: 237 },
+  { month: 'April', desktop: 73 },
+  { month: 'May', desktop: 209 },
+  { month: 'June', desktop: 214 },
 ];
 
 const multiLineData = [
-  { month: "January", desktop: 186, mobile: 123, tablet: 86 },
-  { month: "February", desktop: 305, mobile: 142, tablet: 97 },
-  { month: "March", desktop: 237, mobile: 201, tablet: 112 },
-  { month: "April", desktop: 73, mobile: 94, tablet: 68 },
-  { month: "May", desktop: 209, mobile: 158, tablet: 103 },
-  { month: "June", desktop: 214, mobile: 187, tablet: 115 },
+  { month: 'January', desktop: 186, mobile: 123, tablet: 86 },
+  { month: 'February', desktop: 305, mobile: 142, tablet: 97 },
+  { month: 'March', desktop: 237, mobile: 201, tablet: 112 },
+  { month: 'April', desktop: 73, mobile: 94, tablet: 68 },
+  { month: 'May', desktop: 209, mobile: 158, tablet: 103 },
+  { month: 'June', desktop: 214, mobile: 187, tablet: 115 },
 ];
 
 export const 单条线: Story = {
   args: {
     data: singleLineData,
     xAxisDataKey: 'month',
-    lines: [
-      { dataKey: 'desktop', name: '桌面端' }
-    ],
+    lines: [{ dataKey: 'desktop', name: '桌面端' }],
   },
 };
 
@@ -62,9 +60,7 @@ export const 带标题和副标题: Story = {
     subtitle: '2023年上半年数据统计',
     data: singleLineData,
     xAxisDataKey: 'month',
-    lines: [
-      { dataKey: 'desktop', name: '桌面端' }
-    ],
+    lines: [{ dataKey: 'desktop', name: '桌面端' }],
   },
 };
 
@@ -76,8 +72,8 @@ export const 多条线: Story = {
     xAxisDataKey: 'month',
     lines: [
       { dataKey: 'desktop', name: '桌面端' },
-      { dataKey: 'mobile', name: '移动端',  },
-      { dataKey: 'tablet', name: '平板端', }
+      { dataKey: 'mobile', name: '移动端' },
+      { dataKey: 'tablet', name: '平板端' },
     ],
   },
 };
@@ -108,16 +104,15 @@ export const 自定义样式: Story = {
     data: singleLineData,
     xAxisDataKey: 'month',
     lines: [
-      { 
-        dataKey: 'desktop', 
-        name: '桌面端', 
-        color: '#8b5cf6', 
-        strokeWidth: 3, 
-        showDot: true, 
-        type: 'monotone' 
-      }
+      {
+        dataKey: 'desktop',
+        name: '桌面端',
+        color: '#8b5cf6',
+        strokeWidth: 3,
+        showDot: true,
+        type: 'monotone',
+      },
     ],
     showLegend: false,
   },
-  
-}; 
+};

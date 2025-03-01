@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import HelloWorld from '../components/HelloWorld';
 
 const meta: Meta<typeof HelloWorld> = {
-  title: '组件/HelloWorld',
+  title: 'Common/HelloWorld',
   component: HelloWorld,
   parameters: {
     layout: 'centered',
@@ -10,11 +10,11 @@ const meta: Meta<typeof HelloWorld> = {
   tags: ['autodocs'],
   argTypes: {
     name: { control: 'text' },
-    textColor: { 
-      control: 'color'
+    textColor: {
+      control: 'color',
     },
-    fontSize: { 
-      control: 'text'
+    fontSize: {
+      control: 'text',
     },
     style: { control: 'object' },
   },
@@ -70,4 +70,4 @@ export const 自定义样式: Story = {
       textDecoration: 'underline',
     },
   },
-}; 
+};
