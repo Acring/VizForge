@@ -2,11 +2,11 @@
 
 VizForge 是一个基于 MCP (Model Context Protocol) 的图表生成服务，旨在为各种写作和展示场景提供高质量的数据可视化解决方案。
 
-![示例图表](helloworld-screenshot.png)
+![示例图表](public/example.png)
 
 ## 项目概述
 
-VizForge 使用 Next.js 作为前端框架，Storybook 用于组件开发和调试，并通过 MCP 服务提供图表生成功能。该项目可以帮助用户轻松创建：
+VizForge 使用 Next.js 作为官网框架，Storybook 用于组件开发和调试，并通过 MCP 服务提供图表生成功能。该项目可以帮助用户轻松创建：
 
 - 数据分析图表（柱状图、折线图、饼图等）
 - 功能对比表格
