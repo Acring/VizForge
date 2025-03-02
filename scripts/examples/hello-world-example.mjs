@@ -2,7 +2,7 @@
 
 /**
  * 组件截图工具使用示例
- * 
+ *
  * 此脚本展示了如何使用组件截图工具生成 HelloWorld 组件的截图
  */
 
@@ -16,13 +16,13 @@ import { execSync } from 'child_process';
 const component = 'HelloWorld';
 
 // 输出路径
-const outputPath = 'helloworld-screenshot.png';
+const outputPath = './scripts/examples/helloworld-screenshot.png';
 
 // 组件属性 (JSON 格式)
 const props = JSON.stringify({
   name: '组件截图工具',
   textColor: 'green',
-  fontSize: '1.5rem'
+  fontSize: '1.5rem',
 });
 
 // 构建命令
@@ -37,4 +37,4 @@ try {
 } catch (error) {
   console.error('生成截图失败:', error.message);
   process.exit(1);
-} 
+}

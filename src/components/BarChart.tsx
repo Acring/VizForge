@@ -1,48 +1,41 @@
 import React from 'react';
-import {
-  CartesianGrid,
-  Line,
-  LineChart as RechartsLineChart,
-  XAxis,
-  YAxis,
-  Legend,
-} from 'recharts';
+import { CartesianGrid, Bar, BarChart as RechartsBarChart, XAxis, YAxis, Legend } from 'recharts';
 
 interface DataPoint {
   [key: string]: string | number;
 }
 
 /**
- * 线条配置接口
+ * 柱状配置接口
  */
-interface LineConfig {
+interface BarConfig {
   /**
    * 数据键名
    */
   dataKey: string;
   /**
-   * 线条名称（用于图例显示）
+   * 柱状名称（用于图例显示）
    */
   name?: string;
   /**
-   * 线条颜色
+   * 柱状颜色
    */
   color?: string;
   /**
-   * 线条宽度
+   * 柱状宽度
    */
-  strokeWidth?: number;
+  barSize?: number;
   /**
-   * 是否显示数据点
+   * 是否堆叠显示
    */
-  showDot?: boolean;
+  stackId?: string;
   /**
-   * 线条类型
+   * 柱状圆角
    */
-  type?: 'linear' | 'natural' | 'monotone' | 'step' | 'stepBefore' | 'stepAfter';
+  radius?: number | [number, number, number, number];
 }
 
-interface LineChartProps {
+interface BarChartProps {
   /**
    * 图表标题
    */
@@ -60,11 +53,11 @@ interface LineChartProps {
    */
   xAxisDataKey: string;
   /**
-   * 线条配置数组，用于显示多条线。如果不提供，将根据数据自动生成
+   * 柱状配置数组，用于显示多组柱状。如果不提供，将根据数据自动生成
    */
-  lines?: LineConfig[];
+  bars?: BarConfig[];
   /**
-   * 要排除的数据键名（不会为这些键生成线条）
+   * 要排除的数据键名（不会为这些键生成柱状）
    */
   excludeDataKeys?: string[];
   /**
@@ -88,6 +81,14 @@ interface LineChartProps {
    */
   showLegend?: boolean;
   /**
+   * 是否堆叠显示所有柱状
+   */
+  stacked?: boolean;
+  /**
+   * 柱子组之间的间距
+   */
+  barGap?: number;
+  /**
    * 自定义样式
    */
   style?: React.CSSProperties;
@@ -102,28 +103,30 @@ interface LineChartProps {
 }
 
 /**
- * 折线图组件
+ * 柱状图组件
  *
- * 用于展示数据随时间或类别变化的趋势，支持多条线、标题和副标题
- * 如果不提供lines配置，将根据数据自动生成线条
+ * 用于展示数据分类比较或时间序列数据，支持多组柱状、堆叠柱状、标题和副标题
+ * 如果不提供bars配置，将根据数据自动生成柱状
  */
-export function LineChart({
+export function BarChart({
   title,
   subtitle,
   data,
   xAxisDataKey,
-  lines,
+  bars,
   excludeDataKeys = [],
   marginLeft = 12,
   marginRight = 12,
   marginTop = 20,
   marginBottom = 5,
   showLegend = true,
+  stacked = false,
+  barGap = 4,
   style,
-  width = 400,
-  height = 250,
-}: LineChartProps) {
-  // 默认颜色数组，当线条未指定颜色时使用
+  width = 600,
+  height = 300,
+}: BarChartProps) {
+  // 默认颜色数组，当柱状未指定颜色时使用
   const defaultColors = [
     'hsl(var(--chart-1))',
     'hsl(var(--chart-2))',
@@ -132,10 +135,10 @@ export function LineChart({
     'hsl(var(--chart-5))',
   ];
 
-  // 如果没有提供lines配置，则根据数据自动生成
-  const effectiveLines = React.useMemo(() => {
-    if (lines && lines.length > 0) {
-      return lines;
+  // 如果没有提供bars配置，则根据数据自动生成
+  const effectiveBars = React.useMemo(() => {
+    if (bars && bars.length > 0) {
+      return bars;
     }
 
     // 从数据中提取所有可能的键
@@ -152,18 +155,18 @@ export function LineChart({
       });
     });
 
-    // 为每个键创建一个线条配置
+    // 为每个键创建一个柱状配置
     return Array.from(allKeys).map(
       key =>
         ({
           dataKey: key,
           name: key,
-          type: 'natural' as const,
-          showDot: false,
-          strokeWidth: 2,
-        }) as LineConfig
+          barSize: 20,
+          radius: [4, 4, 0, 0],
+          stackId: stacked ? 'stack' : undefined,
+        }) as BarConfig
     );
-  }, [data, lines, xAxisDataKey, excludeDataKeys]);
+  }, [data, bars, xAxisDataKey, excludeDataKeys, stacked]);
 
   return (
     <div
@@ -184,7 +187,7 @@ export function LineChart({
           )}
         </div>
       )}
-      <RechartsLineChart
+      <RechartsBarChart
         width={width}
         height={title || subtitle ? height - 94 : height}
         accessibilityLayer
@@ -195,6 +198,7 @@ export function LineChart({
           top: marginTop,
           bottom: marginBottom,
         }}
+        barGap={barGap}
       >
         <CartesianGrid vertical={false} strokeDasharray="3 3" className="stroke-gray-500" />
         <YAxis className="text-xs text-gray-600" width={30} />
@@ -208,19 +212,18 @@ export function LineChart({
         />
         {showLegend && <Legend wrapperStyle={{ paddingTop: 10, position: 'relative' }} />}
 
-        {effectiveLines.map((lineConfig, index) => (
-          <Line
-            key={lineConfig.dataKey}
-            dataKey={lineConfig.dataKey}
-            name={lineConfig.name || lineConfig.dataKey}
-            type={lineConfig.type || 'natural'}
-            stroke={lineConfig.color || defaultColors[index % defaultColors.length]}
-            strokeWidth={lineConfig.strokeWidth || 2}
-            dot={lineConfig.showDot || false}
-            activeDot={{ r: 6 }}
+        {effectiveBars.map((barConfig, index) => (
+          <Bar
+            key={barConfig.dataKey}
+            dataKey={barConfig.dataKey}
+            name={barConfig.name || barConfig.dataKey}
+            fill={barConfig.color || defaultColors[index % defaultColors.length]}
+            barSize={barConfig.barSize || 20}
+            stackId={barConfig.stackId || (stacked ? 'stack' : undefined)}
+            radius={barConfig.radius || [4, 4, 0, 0]}
           />
         ))}
-      </RechartsLineChart>
+      </RechartsBarChart>
     </div>
   );
 }
