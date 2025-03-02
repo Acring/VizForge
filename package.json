@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build && pnpm build:mcp",
+    "build": "next build && pnpm build-storybook && mv storybook-static public/storybook-static",
     "start": "next start",
     "lint": "next lint",
     "storybook": "storybook dev -p 6006",
